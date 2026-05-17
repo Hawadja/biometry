@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Dimensions } from 'react-native';
 import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import { requestCameraPermissions, takePhoto } from '../utils/camera';
 import { authenticate } from '../utils/biometrics';
@@ -68,23 +68,31 @@ export default function HomeScreen({ onLock }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Tableau de bord</Text>
-      
-      <TouchableOpacity style={[styles.btn, styles.btnCamera]} onPress={openCamera}>
-        <Text style={styles.btnIcon}>📷</Text>
-        <Text style={styles.btnText}>Caméra</Text>
-      </TouchableOpacity>
-      
-      <TouchableOpacity style={[styles.btn, styles.btnBio]} onPress={testBiometrics}>
-        <Text style={styles.btnIcon}>👆</Text>
-        <Text style={styles.btnText}>Empreinte Digitale</Text>
-      </TouchableOpacity>
-      
-      <TouchableOpacity style={[styles.btn, shakeEnabled ? styles.btnActive : styles.btnShake]} onPress={toggleShake}>
-        <Text style={styles.btnIcon}>📳</Text>
-        <Text style={styles.btnText}>{shakeEnabled ? 'Secousse: ON' : 'Secousse: OFF'}</Text>
-      </TouchableOpacity>
-      
+      {/* STRUCTURE DU BLOC INFO OCCUPANT TOUT L'ÉCRAN */}
+      <View style={styles.infoSection}>
+        <Text style={styles.uniTitle}>UNIVERSITÉ DE YAOUNDÉ 1</Text>
+        
+        <View style={styles.infoRow}>
+          <Text style={styles.infoLabel}>Département :</Text>
+          <Text style={styles.infoValue}>Informatique</Text>
+        </View>
+
+        {/* AJOUT DE L'EXTENSION DÉTAILLÉE ICT4D */}
+        <View style={[styles.infoRow, styles.filiereRow]}>
+          <View style={styles.filiereHeader}>
+            <Text style={styles.infoLabel}>Filière :</Text>
+            <Text style={styles.infoValue}>ICT4D</Text>
+          </View>
+          <Text style={styles.filiereSubtext}>Information Communication Technologies for Development</Text>
+        </View>
+
+        <View style={styles.infoRow}>
+          <Text style={styles.infoLabel}>Code Unité :</Text>
+          <Text style={styles.infoValue}>ICT202</Text>
+        </View>
+      </View>
+
+      {/* AJOUT DU BOUTON DE VERROUILLAGE TOUT EN BAS */}
       <TouchableOpacity style={styles.lockBtn} onPress={onLock}>
         <Text style={styles.lockText}>🔒 Verrouiller</Text>
       </TouchableOpacity>
@@ -93,19 +101,28 @@ export default function HomeScreen({ onLock }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f5f5f5', padding: 20 },
-  header: { fontSize: 24, fontWeight: 'bold', marginBottom: 40, color: '#333' },
-  btn: { width: 250, padding: 20, borderRadius: 15, alignItems: 'center', marginVertical: 10, elevation: 3 },
-  btnCamera: { backgroundColor: '#4CAF50' },
-  btnBio: { backgroundColor: '#2196F3' },
-  btnShake: { backgroundColor: '#FF9800' },
-  btnActive: { backgroundColor: '#f44336' },
-  btnIcon: { fontSize: 32, marginBottom: 5 },
-  btnText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+  container: { flex: 1, backgroundColor: '#f8f9fa', padding: 20 },
+  
+  // Section Informations ajustée avec un espacement régulier distribué (space-evenly) sur l'écran libre
+  infoSection: { flex: 1, justifyContent: 'space-evenly', width: '100%', paddingVertical: 15, marginBottom: 20 },
+  uniTitle: { fontSize: 24, fontWeight: 'bold', color: '#1a1a2e', textAlign: 'center', letterSpacing: 0.5, marginBottom: 10 },
+  
+  // Cartes d'informations agrandies et stylisées pour un meilleur visuel
+  infoRow: { backgroundColor: '#fff', padding: 20, borderRadius: 12, borderWidth: 1, borderColor: '#eef0f2', elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 4, flexDirection: 'row', alignItems: 'center' },
+  infoLabel: { fontSize: 16, fontWeight: 'bold', color: '#555', flex: 1 },
+  infoValue: { fontSize: 16, fontWeight: '700', color: '#1a1a2e', textAlign: 'right' },
+  
+  // Styles spécifiques pour l'affichage de l'extension de la filière
+  filiereRow: { flexDirection: 'column', alignItems: 'stretch' },
+  filiereHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
+  filiereSubtext: { fontSize: 13, color: '#666', fontStyle: 'italic', textAlign: 'center', borderTopWidth: 1, borderTopColor: '#f0f0f0', paddingTop: 8, marginTop: 2, fontWeight: '500' },
+
+  // Nouveau style pour le bouton de verrouillage en bas
+  lockBtn: { backgroundColor: '#333', padding: 16, borderRadius: 12, width: '100%', alignItems: 'center', elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 2, marginBottom: 10 },
+  lockText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+
   captureBtn: { position: 'absolute', bottom: 40, alignSelf: 'center', width: 70, height: 70, borderRadius: 35, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' },
   captureInner: { width: 54, height: 54, borderRadius: 27, backgroundColor: '#fff', borderWidth: 2, borderColor: '#333' },
   closeBtn: { position: 'absolute', top: 40, right: 20, backgroundColor: 'rgba(0,0,0,0.5)', padding: 10, borderRadius: 20 },
-  closeText: { color: '#fff', fontSize: 20 },
-  lockBtn: { position: 'absolute', bottom: 30, backgroundColor: '#333', padding: 15, borderRadius: 10, width: 250, alignItems: 'center' },
-  lockText: { color: '#fff', fontSize: 16, fontWeight: 'bold' }
+  closeText: { color: '#fff', fontSize: 20 }
 });

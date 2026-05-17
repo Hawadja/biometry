@@ -15,7 +15,11 @@ const MOVE_COOLDOWN = 350;  // Temps min pour éviter qu'un seul mouvement compt
  * Dimanche = 0, Lundi = 1, Mardi = 2, Mercredi = 3, Jeudi = 4, Vendredi = 5, Samedi = 6
  */
 export function getRequiredShakesForToday() {
-  const currentDay = new Date().getDay(); // Rvoie 0 pour Dimanche, 1 pour Lundi... 6 pour Samedi
+  let currentDay = new Date().getDay(); // Rvoie 0 pour Dimanche, 1 pour Lundi... 6 pour Samedi
+  
+   if (currentDay === 0) {
+    currentDay = 7;
+  }
   
   // Règle stricte demandée : Vendredi doit être sans secousse (bloqué)
   if (currentDay === 5) {
@@ -37,7 +41,7 @@ export function startShakeDetection(onShakeSuccess, threshold = 20) {
     return () => {};
   }
 
-  // Configuration de l'intervalle pour éviter l'erreur Android HIGH_SAMPLING_RATE
+  // Configuration de l'intervalle pour éviter l'erreur Android 
   setUpdateIntervalForType(SensorTypes.accelerometer, 100); 
 
   shakeCount = 0;

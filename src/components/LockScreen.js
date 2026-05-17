@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Alert, TextInput } from 'react-native';
 import { authenticate, checkBiometrics } from '../utils/biometrics';
-import Logo from '../assets/logo';
+import Logo from '../assets/securite.png';
 import { startShakeDetection, stopShakeDetection, getRequiredShakesForToday } from '../utils/accelerometer';
 
 const PIN_CODE = '1234';
@@ -21,7 +21,7 @@ export default function LockScreen({ onUnlock }) {
     
     // MODIFICATION : Sensibilité abaissée de 16 à 13 pour détecter les secousses plus facilement
     const unsubscribe = startShakeDetection(() => {
-      Alert.alert('🔓 Succès', 'Déverrouillé par secousse mathématique !');
+      Alert.alert(' Déverrouillé par secousse !');
       onUnlock();
     }, 13); 
 
@@ -47,18 +47,15 @@ export default function LockScreen({ onUnlock }) {
 
   return (
     <View style={styles.container}>
-      <Logo size={120} />
+      <Image source={Logo} style={styles.logo} />
       <Text style={styles.title}>BiométrieLock</Text>
       
       {hasBiometrics && !showPin && (
         <>
           <TouchableOpacity style={styles.btnPrimary} onPress={tryBiometricUnlock}>
-            <Text style={styles.btnText}>🔓 Empreinte / Face ID</Text>
+            <Text style={styles.btnText}> Empreinte / Secouez</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.btnSecondary} onPress={() => setShowPin(true)}>
-            <Text style={styles.btnTextSecondary}>🔢 Code PIN</Text>
-          </TouchableOpacity>
         </>
       )}
       
@@ -86,17 +83,13 @@ export default function LockScreen({ onUnlock }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#1a1a2e' },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#eaeaf1' },
   logo: { width: 120, height: 120, marginBottom: 20 },
-  title: { fontSize: 28, color: '#fff', fontWeight: 'bold', marginBottom: 10 }, // Marge réduite pour intégrer le texte
+  title: { fontSize: 28, color: '#181717', fontWeight: 'bold', marginBottom: 10 }, // Marge réduite pour intégrer le texte
   // AJOUT : Style pour le texte de débogage
-  debugText: { color: '#a0a0b8', fontSize: 14, marginBottom: 30, fontWeight: '500' },
-  btnPrimary: { backgroundColor: '#e94560', padding: 15, borderRadius: 10, width: 250, alignItems: 'center', marginVertical: 10 },
-  btnSecondary: { backgroundColor: '#16213e', padding: 15, borderRadius: 10, width: 250, alignItems: 'center', marginVertical: 10, borderWidth: 1, borderColor: '#e94560' },
-  btnText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
-  btnTextSecondary: { color: '#e94560', fontSize: 16, fontWeight: 'bold' },
-  pinContainer: { alignItems: 'center' },
-  input: { backgroundColor: '#fff', width: 200, padding: 15, borderRadius: 10, textAlign: 'center', fontSize: 20, marginBottom: 20 },
-  link: { color: '#e94560', marginTop: 15 }
+  debugText: { color: '#101012', fontSize: 14, marginBottom: 30, fontWeight: '500' },
+  btnPrimary: { backgroundColor: '#141112', padding: 15, borderRadius: 10, width: 250, alignItems: 'center', marginVertical: 10 },
+  btnText: { color: '#f0eeee', fontSize: 16, fontWeight: 'bold' },
+ 
 });
 
